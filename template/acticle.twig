@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body class="dark:bg-gray-900">
+{% set var1 = field_cp1_time_out_1|date("H:i:s") %}
+{% set var2 = field_cp1_time_in_1|date("H:i:s") %}
+
+{% set difference = date(var1).diff(date(var2)) %}
+
+{{ difference }}
+
+<h1>{{ data["titre"] }}</h1>
+<p>
+    {{ data["texte"] }}
+</p>
+
+<div class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+    <img class="mr-4 w-16 h-16 rounded-full" src="https://i0.wp.com/letmentertainyou.com/wp-content/uploads/2018/05/one-punch-man.jpg?fit=800%2C690&ssl=1" alt="Jese Leos">
+    <div>
+        <a href="#" rel="author" class="text-xl font-bold text-gray-900 dark:text-white"></a>
+        <p class="text-base text-gray-500 dark:text-gray-400">Graphic Designer, educator & CEO Flowbite</p>
+        <p class="text-base text-gray-500 dark:text-gray-400"><time pubdate datetime="2022-02-08" title="February 8th, 2022">Feb. 8, 2022</time></p>
+    </div>
+</div>
+<div class="flex justify-between px-4 mx-auto max-w-screen-xl ">
+    <article class="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
+        <header class="mb-4 lg:mb-6 not-format">
+            <address class="flex items-center mb-6 not-italic">
+                <div class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                    <img class="mr-4 w-16 h-16 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Jese Leos">
+                    <div>
+                        <a href="#" rel="author" class="text-xl font-bold text-gray-900 dark:text-white">{{ data["auteur"] }}</a>
+                        <p class="text-base text-gray-500 dark:text-gray-400">{{ data["description"] }}</p>
+                        <p class="text-base text-gray-500 dark:text-gray-400"> </p>
+                    </div>
+                </div>
+            </address>
+            <h1 class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">{{ data["titre"] }}</h1>
+        </header>
+       </article>
+
+</div>
+
+</body>
+</html>
