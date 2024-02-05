@@ -79,7 +79,12 @@ $app->get('/add-article', function (Request $request, Response $response, $args)
 
 })->setName('article');
 $app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo) {
-    dd($_POST);
+    $creationDate = date('Y-m-d H:i:s');
+
+$addQuery= $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication)VALUES (:titre, :texte, :auteur, :categorie, :creation)");
+$addQuery->execute(["titre" =>  $_POST['article-title'], "texte" =>  $_POST["content"], "auteur" =>  $_POST["username"], "categorie" =>  $_POST["categorie"] ,'creation' => [$creationDate]]);
+
+
     return $response->withHeader('Location',"/")->withStatus(302);
 });
 
