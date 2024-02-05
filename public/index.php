@@ -39,8 +39,8 @@ $app->get('/', function (Request $request, Response $response) use ($pdo) {
     $view = Twig::fromRequest($request);
     return $view->render($response, 'home.twig', [
         'allArticles' => $allArticles,
-        'dateNow'=> Carbon::now($allArticles['date_publication']),
- 'pubDate' =>  Carbon::parse($allArticles['expiration¨'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
+        'dateNow' => Carbon::now($allArticles['date_publication']),
+        'pubDate' => Carbon::parse($allArticles['expiration¨'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
     ]);
 })->setName('articles');
 
@@ -60,21 +60,23 @@ $app->get('/article/{id}', function (Request $request, Response $response, $args
 
 
     return $view->render($response, 'article.twig', [
+        'id' => $args['id'],
         'data' => $data,
         'category' => $category,
-        'pubDate' =>  Carbon::parse($data['date_publication'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
+        'pubDate' => Carbon::parse($data['date_publication'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
     ]);
 
 })->setName('article');
+
 
 $app->post("/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
 
     $id = $args['id'];
 
-    $deleteQuery= $pdo->prepare("DELETE FROM articles WHERE id = :id");
+    $deleteQuery = $pdo->prepare("DELETE FROM articles WHERE id = :id");
     $deleteQuery->execute(["id" => $id]);
 
-    return $response->withHeader('Location',"/")->withStatus(302);
+    return $response->withHeader('Location', "/")->withStatus(302);
 });
 
 //Formulaire add an article
@@ -89,12 +91,61 @@ $app->get('/add-article', function (Request $request, Response $response, $args)
 $app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo) {
     $creationDate = Carbon::now();
 
-    if ( mb_strlen($_POST['article-title']) | mb_strlen($_POST["content"])  |mb_strlen($_POST["username"]) != 0 ){
-        $addQuery= $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication)VALUES (:titre, :texte, :auteur, :categorie, :creation)");
-        $addQuery->execute(["titre" =>  $_POST['article-title'], "texte" =>  $_POST["content"], "auteur" =>  $_POST["username"], "categorie" =>  $_POST["categorie"] ,'creation' => $creationDate]);
+    if (mb_strlen($_POST['article-title']) | mb_strlen($_POST["content"]) | mb_strlen($_POST["username"]) != 0) {
+        $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description)VALUES (:titre, :texte, :auteur, :categorie, :creation, :description)");
+        $addQuery->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "auteur" => $_POST["username"], "categorie" => $_POST["categorie"], 'creation' => $creationDate, 'description' => $_POST["description"] ]);
     }
 
-    return $response->withHeader('Location',"/")->withStatus(302);
+    return $response->withHeader('Location', "/")->withStatus(302);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+$app->get("/edit/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
+    $view = Twig::fromRequest($request);
+
+    $taquery = $pdo->prepare('Select * from articles where id = :id');
+    $taquery->execute(["id" => $args["id"]]);
+    $data = $taquery->fetch();
+
+
+
+    return $view->render($response, 'form-edit.twig', [
+        'data' => $data,
+    ]);
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$app->post("/edit/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
+
+
+    $updateData = $pdo->prepare('UPDATE articles SET (name, categorie_id, texte)  VALUES (:titre, :texte, :auteur, :categorie, :creation) WHERE id = :id ');
+    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "auteur" => $_POST["username"], "categorie" => $_POST["categorie"]]);
+
+    return $response->withHeader('Location', "/")->withStatus(302);
 });
 
 // Run app
