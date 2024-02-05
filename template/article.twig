@@ -9,10 +9,7 @@
     <title>Document</title>
 </head>
 <body class="dark:bg-gray-900">
-{% set var1 = field_cp1_time_out_1|date("H:i:s") %}
-{% set var2 = field_cp1_time_in_1|date("H:i:s") %}
 
-{% set difference = date(var1).diff(date(var2)) %}
 
 {{ difference }}
 
