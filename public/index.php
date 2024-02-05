@@ -39,8 +39,8 @@ $app->get('/', function (Request $request, Response $response) use ($pdo) {
     $view = Twig::fromRequest($request);
     return $view->render($response, 'home.twig', [
         'allArticles' => $allArticles,
-        'dateNow'=> Carbon::now($allArticles['date_publication'])
-
+        'dateNow'=> Carbon::now($allArticles['date_publication']),
+ 'pubDate' =>  Carbon::parse($allArticles['expiration¨'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
     ]);
 })->setName('articles');
 
@@ -62,7 +62,7 @@ $app->get('/article/{id}', function (Request $request, Response $response, $args
     return $view->render($response, 'article.twig', [
         'data' => $data,
         'category' => $category,
-        'pubDate' =>  Carbon::parse($data['expiration'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
+        'pubDate' =>  Carbon::parse($data['date_publication'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
     ]);
 
 })->setName('article');
@@ -79,10 +79,12 @@ $app->get('/add-article', function (Request $request, Response $response, $args)
 
 })->setName('article');
 $app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo) {
-    $creationDate = date('Y-m-d H:i:s');
+    $creationDate = Carbon::now();
+
 
 $addQuery= $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication)VALUES (:titre, :texte, :auteur, :categorie, :creation)");
-$addQuery->execute(["titre" =>  $_POST['article-title'], "texte" =>  $_POST["content"], "auteur" =>  $_POST["username"], "categorie" =>  $_POST["categorie"] ,'creation' => [$creationDate]]);
+
+$addQuery->execute(["titre" =>  $_POST['article-title'], "texte" =>  $_POST["content"], "auteur" =>  $_POST["username"], "categorie" =>  $_POST["categorie"] ,'creation' => $creationDate]);
 
 
     return $response->withHeader('Location',"/")->withStatus(302);
