@@ -10,12 +10,19 @@
 </head>
 <body class="dark:bg-gray-900">
 
-<div class="flex justify-between px-4 mx-auto max-w-screen-2xl mt-24 ">
+<div class="px-12 pt-12 justify-end flex">
+
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="document.getElementById('popup').classList.remove('hidden')">Options</button>
+
+</div>
+
+
+<div class="flex justify-between px-4 mx-auto max-w-screen-2xl mt-12 ">
     <article class="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
         <header class="mb-4 lg:mb-6 not-format">
             <address class="flex items-center mb-6 not-italic">
                 <div class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-                    <img class="mr-4 w-16 h-16 rounded-full" src="https://i0.wp.com/letmentertainyou.com/wp-content/uploads/2018/05/one-punch-man.jpg?fit=800%2C690&ssl=1" alt="Jese Leos">
+                    <img class="mr-4 w-16 h-16 rounded-full" src="https://i0.wp.com/letmentertainyou.com/wp-content/uploads/2018/05/one-punch-man.jpg?fit=800%2C690&ssl=1" alt="photo de profile">
                     <div>
                         <a href="#" rel="author" class="text-xl font-bold text-gray-900 dark:text-white">{{ data["auteur"] }}</a>
                         <p class="text-base text-gray-500 dark:text-gray-400">{{ category['name'] }}</p>
@@ -27,7 +34,7 @@
             <h1 class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">{{ data["titre"] }}</h1>
 
             <div class="align-center">
-                <img class="w-full" src="{{ data['picture-link'] }}" alt="Sunset in the mountains">
+                <img class="w-full" src="{{ data['picture-link'] }}" alt="image de user">
             </div>
         </header>
         <div class="text-white">
@@ -39,32 +46,30 @@
 
 </div>
 
-
-<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="document.getElementById('popup').classList.remove('hidden')">supprimer l'article</button>
-
 <div id="popup" class="hidden fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
     <div class="bg-white p-8 rounded-lg">
-        <h2 class="text-xl font-bold mb-4">Etes-vous sure de vouloir supprimer l'article ?</h2>
+        <h2 class="text-xl font-bold mb-4">Modify article</h2>
 
         <div class="flex">
         <form method="post" action="" class="mt-4 mr-4">
-            <input type="submit" name="submit" value="Delete" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-
+            <input type="submit" name="submit" value="Delete" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
         </form>
 
-            <a href="http://localhost:8080/edit/article/{{id}}" class="p-4 px-6 rounded-md bg-indigo-600 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Retourner à l'acceuil
+            <a href="http://localhost:8080/edit/article/{{id}}" class="mt-4 mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                edit
             </a>
-        <button class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="document.getElementById('popup').classList.add('hidden')">Fermer</button>
+        <button class="mt-4 bg-black  text-white font-bold py-2 px-4 rounded" onclick="document.getElementById('popup').classList.add('hidden')">close</button>
         </div>
     </div>
 </div>
 
+<div class="px-12 pt-12 justify-end flex">
 
 
-<a href="http://localhost:8080/" class="p-4 px-6 rounded-md bg-indigo-600 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-    Retourner à l'acceuil
-</a>
+    <a href="http://localhost:8080/" class="p-4 px-6 rounded-md bg-indigo-600 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Retourner à l'acceuil
+    </a>
+</div>
 
 </body>
 </html>

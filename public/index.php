@@ -30,6 +30,11 @@ $app->addRoutingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 $app->add(TwigMiddleware::create($app, $twig));
 
+
+
+
+
+
 // Define named route
 $app->get('/', function (Request $request, Response $response) use ($pdo) {
 
@@ -43,6 +48,11 @@ $app->get('/', function (Request $request, Response $response) use ($pdo) {
         'pubDate' => Carbon::parse($allArticles['expiration¨'])->locale('fr_FR')->isoFormat('dddd D MMMM YYYY')
     ]);
 })->setName('articles');
+
+
+
+
+
 
 
 //add all article at Home
@@ -69,6 +79,9 @@ $app->get('/article/{id}', function (Request $request, Response $response, $args
 })->setName('article');
 
 
+
+
+
 $app->post("/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
 
     $id = $args['id'];
@@ -79,12 +92,19 @@ $app->post("/article/{id}", function (Request $request, Response $response, $arg
     return $response->withHeader('Location', "/")->withStatus(302);
 });
 
+
+
+
+
 //Formulaire add an article
 $app->get('/add-article', function (Request $request, Response $response, $args) use ($pdo) {
     $view = Twig::fromRequest($request);
     return $view->render($response, 'form.twig', [
     ]);
 });
+
+
+
 
 
 //Query add an article
@@ -117,36 +137,22 @@ $app->get("/edit/article/{id}", function (Request $request, Response $response, 
     $taquery->execute(["id" => $args["id"]]);
     $data = $taquery->fetch();
 
-
-
     return $view->render($response, 'form-edit.twig', [
         'data' => $data,
+        'id' => $args['id']
     ]);
 
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $app->post("/edit/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
 
+    $updateData = $pdo->prepare('UPDATE articles SET titre = :titre, categorie_id = :categorie, texte = :texte WHERE id = :id');
 
-    $updateData = $pdo->prepare('UPDATE articles SET (name, categorie_id, texte)  VALUES (:titre, :texte, :auteur, :categorie, :creation) WHERE id = :id ');
-    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "auteur" => $_POST["username"], "categorie" => $_POST["categorie"]]);
+    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "categorie" => $_POST["categorie"], 'id' => $args['id']]);
 
     return $response->withHeader('Location', "/")->withStatus(302);
 });
+
 
 // Run app
 $app->run();
