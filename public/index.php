@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 require '../vendor/autoload.php';
 
@@ -29,7 +31,7 @@ $app->addErrorMiddleware(true, true, true);
 $app->add(TwigMiddleware::create($app, $twig));
 
 // Define named route
-$app->get('/', function ($request, $response) use ($pdo) {
+$app->get('/', function (Request $request, Response $response) use ($pdo) {
 
     $query = $pdo->prepare('SELECT * FROM articles');
     $query->execute();
@@ -44,7 +46,7 @@ $app->get('/', function ($request, $response) use ($pdo) {
 
 
 
-$app->get('/article/{id}', function ($request, $response, $args) use ($pdo) {
+$app->get('/article/{id}', function (Request $request, Response $response, $args) use ($pdo) {
     $query = $pdo->prepare('Select * from articles where id = :id');
     $query->execute(["id" => $args["id"]]);
     $data = $query->fetch();
@@ -65,7 +67,7 @@ $app->get('/article/{id}', function ($request, $response, $args) use ($pdo) {
 
 })->setName('article');
 
-$app->get('/add-article', function ($request, $response, $args) use ($pdo) {
+$app->get('/add-article', function (Request $request, Response $response, $args) use ($pdo) {
 
     $view = Twig::fromRequest($request);
 
@@ -76,6 +78,10 @@ $app->get('/add-article', function ($request, $response, $args) use ($pdo) {
     ]);
 
 })->setName('article');
+$app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo) {
+    dd($_POST);
+    return $response->withHeader('Location',"/")->withStatus(302);
+});
 
 // Run app
 $app->run();
