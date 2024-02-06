@@ -13,27 +13,50 @@
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
             <h2 class="text-center mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-                Blog de JordyBSK</h2>
-            <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">Bienvenue sur le meilleur blog de toute la
-                suisse</p>
+                JordyBSK's blog</h2>
+            <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">Welcome to the best blog in
+                Switzerland</p>
 
             <h2 class="text-center mb-4 text-3xl lg:text-3xl tracking-tight font-extrabold text-gray-900 dark:text-white mt-12">
-                click ici pour rajouter un article dans ton blog</h2>
-            <a href="http://localhost:8080/add-article" class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
+                click here to add an article to your blog</h2>
+            <a href="http://localhost:8080/add-article"
+               class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
                 ajouter un article
             </a>
-
         </div>
+        <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
+            <form method="get">
+                <select class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
+                        id="categories" name="categories">
+                    <option value="1">Technologie</option>
+                    <option value="2">Jardinage</option>
+                    <option value="3">Santé</option>
+                    <option value="4">Productivité</option>
+                    <option value="5">Musique</option>
+                    <option value="6">Marketing</option>
+                    <option value="7">Voyage</option>
+                    <option value="8">Beauté</option>
+                    <option value="9">Entrepreneuriat</option>
+                    <option value="10">Santé mentale</option>
+                    <option value="11">cuisine</option>
+                </select>
+                <button class="inline-flex items-center justify-center p-5 text-base font-medium text-white-800 rounded-lg bg-indigo-600 hover:bg-indigo-800 dark:text-gray-400 dark:bg-indigo-600 dark:bg-indigo-700 ">
+                    sort
+                </button>
+            </form>
+        </div>
+
+
         <div class="grid gap-8 lg:grid-cols-2">
 
-            {% for article in allArticles %}
+            {% for articleIndex, article in allArticles%}
 
                 <article
                         class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                     <div class="h-64 bg-cover hover:bg-gray"
                          style="background-image: url('{{ article['picture-link'] }}')"></div>
                     <div class="flex justify-between items-center mb-5 text-gray-500">
-                        <span class="text-sm">{{ pubDates[article['id']] }}</span>
+                        <span class="text-sm mt-2">{{ pubDate[articleIndex] }}</span>
                     </div>
                     <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a
                                 href="http://localhost:8080/article/{{ article['id'] }}">        {{ article["titre"] }}</a>
