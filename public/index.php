@@ -37,11 +37,16 @@ $app->add(TwigMiddleware::create($app, $twig));
 
 // Define named route
 $pubDate = [];
+
 $app->get('/', function (Request $request, Response $response) use ($pdo) {
 
-
+if (isset($_GET['categories'])){
+    $query = $pdo->prepare('Select * from articles where categorie_id = :categorie');
+    $query->execute(["categorie" => $_GET['categories']]);
+}else{
     $query = $pdo->prepare('SELECT * FROM articles');
     $query->execute();
+}
     $allArticles = $query->fetchAll();
 
     $pubDates = [];
@@ -55,22 +60,9 @@ $app->get('/', function (Request $request, Response $response) use ($pdo) {
         'allArticles' => $allArticles,
         'pubDate' => $pubDates
     ]);
+
+
 });
-
-$app->get("/?categories={id}", function (Request $request, Response $response, $args) use ($pdo) {
-
-    $view = Twig::fromRequest($request);
-    dd($args);
-
-    $selectEdit = $pdo->prepare('Select * from articles where categorie_id = :categorie_id');
-    $selectEdit->execute(["categorie_id" => $args["catecategorie_id"]]);
-    $data = $selectEdit->fetch();
-
-    return $view->render($response, 'form-edit.twig', [
-
-    ]);
-});
-
 
 
 
@@ -87,7 +79,7 @@ $app->get('/article/{id}', function (Request $request, Response $response, $args
 
 
     $categoryQuery = $pdo->prepare('Select * FROM categories WHERE id = :id');
-    $categoryQuery->execute(["id" => $args["id"]]);
+    $categoryQuery->execute(["id" => $data["categorie_id"]]);
     $category = $categoryQuery->fetch();
 
 
@@ -134,8 +126,8 @@ $app->post("/add-article", function (Request $request, Response $response, $args
     $creationDate = Carbon::now();
 
     if (mb_strlen($_POST['article-title']) | mb_strlen($_POST["content"]) | mb_strlen($_POST["username"]) != 0) {
-        $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description) VALUES (:titre, :texte, :auteur, :categorie, :creation, :description)");
-        $addQuery->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "auteur" => $_POST["username"], "categorie" => $_POST["categorie"], 'creation' => $creationDate, 'description' => $_POST["description"] ]);
+        $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description) VALUES (:titre, :texte, :auteur, :categories, :creation, :description)");
+        $addQuery->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "auteur" => $_POST["username"], "categories" => $_POST["categories"], 'creation' => $creationDate, 'description' => $_POST["description"] ]);
     }
 
     return $response->withHeader('Location', "/")->withStatus(302);
