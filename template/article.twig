@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ data['titre'] }}</title>
+    <title>{{ data['titre']|e }}</title>
 </head>
 <body class="dark:bg-gray-900">
 
@@ -24,17 +24,17 @@
                 <div class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                     <img class="mr-4 w-16 h-16 rounded-full" src="https://i0.wp.com/letmentertainyou.com/wp-content/uploads/2018/05/one-punch-man.jpg?fit=800%2C690&ssl=1" alt="photo de profile">
                     <div>
-                        <a href="#" rel="author" class="text-xl font-bold text-gray-900 dark:text-white">{{ data["auteur"] }}</a>
-                        <p class="text-base text-gray-500 dark:text-gray-400">{{ category['name'] }}</p>
-                        <p class="text-base text-gray-500 dark:text-gray-400">{{ pubDate }}</p>
+                        <a href="#" rel="author" class="text-xl font-bold text-gray-900 dark:text-white">{{ data["auteur"]|e }}</a>
+                        <p class="text-base text-gray-500 dark:text-gray-400">{{ category['name']|e }}</p>
+                        <p class="text-base text-gray-500 dark:text-gray-400">{{ pubDate|e }}</p>
                         <p class="text-base text-gray-500 dark:text-gray-400"> </p>
                     </div>
                 </div>
             </address>
-            <h1 class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">{{ data["titre"] }}</h1>
+            <h1 class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">{{ data["titre"]|e }}</h1>
 
             <div class="align-center">
-                <img class="w-full" src="{{ data['picture-link'] }}" alt="image de user">
+                <img class="w-full" src="{{ data['picture-link']|e }}" alt="image de user">
             </div>
         </header>
         <div class="text-white">

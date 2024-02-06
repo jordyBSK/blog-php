@@ -112,8 +112,14 @@
                 </div>
             </div>
 
+            {% if errorMessage|length != 0 %}
+            <div class="justify-start p-4 mb-4 text-lg text-red rounded-lg dark:bg-gray-700 dark:text-red-400" role="alert">
+                {{ errorMessage }}
+            </div>
+            {% endif %}
 
             <div class="mt-6 flex items-center justify-end gap-x-6">
+
                 <a href="http://localhost:8080/"
                    class="text-sm font-semibold leading-6 text-gray-900">
                     Cancel
@@ -125,6 +131,8 @@
             </div>
         </div>
     </form>
+
+
 </div>
 
 <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>

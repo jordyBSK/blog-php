@@ -34,7 +34,6 @@ $app->add(TwigMiddleware::create($app, $twig));
 
 
 
-
 // Define named route
 $pubDate = [];
 
@@ -130,13 +129,30 @@ $app->get('/add-article', function (Request $request, Response $response, $args)
 
 
 //Query add an article
-$app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo) {
+$app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo, $twig) {
     $creationDate = Carbon::now();
+    $errorMessage = "";
 
-    if (mb_strlen($_POST['article-title']) | mb_strlen($_POST["content"]) | mb_strlen($_POST["username"]) != 0) {
+    if (!empty($_POST['article-title']) && !empty($_POST["description"]) && !empty($_POST["content"]) && !empty($_POST["username"])) {
         $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description) VALUES (:titre, :texte, :auteur, :categories, :creation, :description)");
-        $addQuery->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "auteur" => $_POST["username"], "categories" => $_POST["categories"], 'creation' => $creationDate, 'description' => $_POST["description"] ]);
+        $addQuery->execute([
+            "titre" => $_POST['article-title'],
+            "texte" => $_POST["content"],
+            "auteur" => $_POST["username"],
+            "categories" => $_POST["categories"],
+            'creation' => $creationDate,
+            'description' => $_POST["description"]
+        ]);
     }
+
+ else
+ {
+$errorMessage = "Please fill in the required fields";
+
+     return $twig->render($response, 'form.twig', [
+         'errorMessage' => $errorMessage,
+     ]);
+}
 
     return $response->withHeader('Location', "/")->withStatus(302);
 });
@@ -160,9 +176,9 @@ $app->get("/edit/article/{id}", function (Request $request, Response $response, 
 // query for edit an article
 $app->post("/edit/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
 
-    $updateData = $pdo->prepare('UPDATE articles SET titre = :titre, categorie_id = :categorie, texte = :texte WHERE id = :id');
+    $updateData = $pdo->prepare('UPDATE articles SET titre = :titre, categorie_id = :categorie, description = :description, texte = :texte WHERE id = :id');
 
-    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "categorie" => $_POST["categorie"], 'id' => $args['id']]);
+    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"],"description" => $_POST["description"] , "categorie" => $_POST["categorie"], 'id' => $args['id']]);
 
     return $response->withHeader('Location', "/article/". $args['id'])->withStatus(302);
 });
