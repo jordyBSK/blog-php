@@ -43,7 +43,15 @@ $app->get('/', function (Request $request, Response $response) use ($pdo) {
 if (isset($_GET['categories'])){
     $query = $pdo->prepare('Select * from articles where categorie_id = :categorie');
     $query->execute(["categorie" => $_GET['categories']]);
-}else{
+}elseif (isset($_GET['search']) && isset($_GET['searchBtn']) ) {
+$search = $_GET['search'];
+
+    $query = $pdo->prepare("SELECT * FROM articles WHERE titre LIKE ? ");
+    $query->setFetchMode(PDO::FETCH_ASSOC);
+    $query->execute(["%$search%"]);
+}
+
+else{
     $query = $pdo->prepare('SELECT * FROM articles');
     $query->execute();
 }
