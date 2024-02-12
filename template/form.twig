@@ -11,7 +11,7 @@
 <body class="p-6">
 
 <div class="justify-between px-4 mt-12 ">
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data" >
         <div>
             <div class="border-b border-gray-900/10 pb-6">
                 <h2 class="text-base font-semibold leading-7 text-gray-900">add an article</h2>
@@ -113,7 +113,7 @@
             </div>
 
             {% if errorMessage|length != 0 %}
-            <div class="justify-start p-4 mb-4 text-lg text-red rounded-lg dark:bg-gray-700 dark:text-red-400" role="alert">
+            <div class="justify-start p-4 mb-4 text-lg text-red rounded-lg dark:bg-gray-700 dark:text-red-400">
                 {{ errorMessage }}
             </div>
             {% endif %}

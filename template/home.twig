@@ -40,35 +40,37 @@
                     <option value="10">Santé mentale</option>
                     <option value="11">cuisine</option>
                 </select>
-                <button class="inline-flex items-center justify-center p-5 text-base font-medium text-white-800 rounded-lg bg-indigo-600 hover:bg-indigo-800 dark:text-gray-400 dark:bg-indigo-600 dark:bg-indigo-700 ">
+                <button class="ml-2 inline-flex items-center justify-center p-5 text-base font-medium text-white rounded-lg bg-indigo-600 hover:bg-indigo-800  dark:bg-indigo-600 dark:bg-indigo-700">
                     sort
                 </button>
             </form>
 
             <form method="get" class="max-w-md mx-auto mt-12 flex">
                 <label>
-                    <input name="search" class=" mr-4 inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white" placeholder="search" value=""></input>
+                    <input name="search"
+                           class=" mr-2 inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
+                           placeholder="search" value="">
                 </label>
                 <button type="submit" name="searchBtn"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        class="inline-flex items-center justify-center p-5 text-base font-medium text-white rounded-lg bg-indigo-600 hover:bg-indigo-800  dark:bg-indigo-600 dark:bg-indigo-700">
                     search
                 </button>
-                <button type="submit" name="searchReset"
-                        class="text-white ml-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <a href="http://localhost:8080"
+                   class=" ml-4 inline-flex items-center justify-center p-5 text-base font-medium text-white rounded-lg bg-indigo-600 hover:bg-indigo-800 dark:bg-indigo-600 dark:bg-indigo-700">
                     reset
-                </button>
+                </a>
             </form>
         </div>
 
 
         <div class="grid gap-8 lg:grid-cols-2">
 
-            {% for articleIndex, article in allArticles%}
+            {% for articleIndex, article in allArticles %}
 
                 <article
                         class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                     <div class="h-64 bg-cover hover:bg-gray"
-                         style="background-image: url('{{ article['picture-link'] }}')"></div>
+                         style="background-image: url('{{ article['picture'] }}')"></div>
                     <div class="flex justify-between items-center mb-5 text-gray-500">
                         <span class="text-sm mt-2">{{ pubDate[articleIndex]|e }}</span>
                     </div>
@@ -85,7 +87,7 @@
                                  src="https://i0.wp.com/letmentertainyou.com/wp-content/uploads/2018/05/one-punch-man.jpg?fit=800%2C690&ssl=1"
                                  alt="Bonnie Green avatar"/>
                             <span class="font-medium dark:text-white">
-                                  {{ article["auteur"] |e}}
+                                  {{ article["auteur"] |e }}
                       </span>
                         </div>
                         <a href="http://localhost:8080/article/{{ article['id']|e }}"

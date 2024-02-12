@@ -31,29 +31,24 @@ $app->addErrorMiddleware(true, true, true);
 $app->add(TwigMiddleware::create($app, $twig));
 
 
-
-
-
 // Define named route
 $pubDate = [];
 
 $app->get('/', function (Request $request, Response $response) use ($pdo) {
 
-if (isset($_GET['categories'])){
-    $query = $pdo->prepare('Select * from articles where categorie_id = :categorie');
-    $query->execute(["categorie" => $_GET['categories']]);
-}elseif (isset($_GET['search']) && isset($_GET['searchBtn']) ) {
-$search = $_GET['search'];
+    if (isset($_GET['categories'])) {
+        $query = $pdo->prepare('Select * from articles where categorie_id = :categorie');
+        $query->execute(["categorie" => $_GET['categories']]);
+    } elseif (isset($_GET['search']) && isset($_GET['searchBtn'])) {
+        $search = $_GET['search'];
 
-    $query = $pdo->prepare("SELECT * FROM articles WHERE titre LIKE ? ");
-    $query->setFetchMode(PDO::FETCH_ASSOC);
-    $query->execute(["%$search%"]);
-}
-
-else{
-    $query = $pdo->prepare('SELECT * FROM articles');
-    $query->execute();
-}
+        $query = $pdo->prepare("SELECT * FROM articles WHERE titre LIKE ? ");
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->execute(["%$search%"]);
+    } else {
+        $query = $pdo->prepare('SELECT * FROM articles');
+        $query->execute();
+    }
     $allArticles = $query->fetchAll();
 
     $pubDates = [];
@@ -70,10 +65,6 @@ else{
 
 
 });
-
-
-
-
 
 
 //add all article at Home
@@ -100,9 +91,6 @@ $app->get('/article/{id}', function (Request $request, Response $response, $args
 });
 
 
-
-
-
 $app->post("/article/{id}", function (Request $request, Response $response, $args) use ($pdo) {
 
     $id = $args['id'];
@@ -114,9 +102,6 @@ $app->post("/article/{id}", function (Request $request, Response $response, $arg
 });
 
 
-
-
-
 //Formulaire add an article
 $app->get('/add-article', function (Request $request, Response $response, $args) use ($pdo) {
     $view = Twig::fromRequest($request);
@@ -125,38 +110,51 @@ $app->get('/add-article', function (Request $request, Response $response, $args)
 });
 
 
-
-
-
-//Query add an article
 $app->post("/add-article", function (Request $request, Response $response, $args) use ($pdo, $twig) {
     $creationDate = Carbon::now();
-    $errorMessage = "";
+    $errorMessage = '';
 
     if (!empty($_POST['article-title']) && !empty($_POST["description"]) && !empty($_POST["content"]) && !empty($_POST["username"])) {
-        $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description) VALUES (:titre, :texte, :auteur, :categories, :creation, :description)");
-        $addQuery->execute([
-            "titre" => $_POST['article-title'],
-            "texte" => $_POST["content"],
-            "auteur" => $_POST["username"],
-            "categories" => $_POST["categories"],
-            'creation' => $creationDate,
-            'description' => $_POST["description"]
+
+        if (!empty($_FILES['file-upload']['name'])) {
+            $fichier = "images-user";
+            $image = $fichier . basename($_FILES["file-upload"]["name"]);
+
+            if (move_uploaded_file($_FILES["file-upload"]["tmp_name"], $image)) {
+                $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description, picture) VALUES (:titre, :texte, :auteur, :categories, :creation, :description, :picture)");
+                $addQuery->execute([
+                    "titre" => $_POST['article-title'],
+                    "texte" => $_POST["content"],
+                    "auteur" => $_POST["username"],
+                    "categories" => $_POST["categories"],
+                    'creation' => $creationDate,
+                    'description' => $_POST["description"],
+                    'picture' => $image
+                ]);
+            }
+        } else {
+            $addQuery = $pdo->prepare("INSERT INTO articles (titre, texte, auteur, categorie_id, date_publication, description) VALUES (:titre, :texte, :auteur, :categories, :creation, :description)");
+            $addQuery->execute([
+                "titre" => $_POST['article-title'],
+                "texte" => $_POST["content"],
+                "auteur" => $_POST["username"],
+                "categories" => $_POST["categories"],
+                'creation' => $creationDate,
+                'description' => $_POST["description"]
+            ]);
+        }
+    } else {
+        $errorMessage = "Veuillez remplir tous les champs requis.";
+    }
+
+    if (!empty($errorMessage)) {
+        return $twig->render($response, 'form.twig', [
+            'errorMessage' => $errorMessage,
         ]);
     }
 
- else
- {
-$errorMessage = "Please fill in the required fields";
-
-     return $twig->render($response, 'form.twig', [
-         'errorMessage' => $errorMessage,
-     ]);
-}
-
     return $response->withHeader('Location', "/")->withStatus(302);
 });
-
 
 
 //get article to edit
@@ -178,11 +176,10 @@ $app->post("/edit/article/{id}", function (Request $request, Response $response,
 
     $updateData = $pdo->prepare('UPDATE articles SET titre = :titre, categorie_id = :categorie, description = :description, texte = :texte WHERE id = :id');
 
-    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"],"description" => $_POST["description"] , "categorie" => $_POST["categorie"], 'id' => $args['id']]);
+    $updateData->execute(["titre" => $_POST['article-title'], "texte" => $_POST["content"], "description" => $_POST["description"], "categorie" => $_POST["categorie"], 'id' => $args['id']]);
 
-    return $response->withHeader('Location', "/article/". $args['id'])->withStatus(302);
+    return $response->withHeader('Location', "/article/" . $args['id'])->withStatus(302);
 });
-
 
 
 // Run app
